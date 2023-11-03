@@ -3,7 +3,7 @@
 
 ### 智慧功能性近紅外光光譜術應用於思覺失調症與雙向情緒障礙症： 可解釋人工智慧演算法之可行性評估
 
-### Intelligent functional near-infrared spectroscopy for schizophrenia and bipolar disorder: Feasibility assessment of an explainable artificial intelligence algorithm
+Intelligent functional near-infrared spectroscopy for schizophrenia and bipolar disorder: Feasibility assessment of an explainable artificial intelligence algorithm
 
 # Abstract
 目前在臨床精神疾病的診斷中，主要仰賴醫生的專業經驗以及使用量表進行評估。然而，
