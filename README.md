@@ -1,8 +1,9 @@
 # <h1 align= 'center'>國立陽明交通大學光電工程學系碩士論文 -- 程式部分</h1>
 # Thesis title
-**論文題目:** 智慧功能性近紅外光光譜術應用於思覺失調症與雙向情緒障礙症： 可解釋人工智慧演算法之可行性評估
 
-**英文題目:** Intelligent functional near-infrared spectroscopy for schizophrenia and bipolar disorder: Feasibility assessment of an explainable artificial intelligence algorithm
+### 智慧功能性近紅外光光譜術應用於思覺失調症與雙向情緒障礙症： 可解釋人工智慧演算法之可行性評估
+
+### Intelligent functional near-infrared spectroscopy for schizophrenia and bipolar disorder: Feasibility assessment of an explainable artificial intelligence algorithm
 
 # Abstract
 目前在臨床精神疾病的診斷中，主要仰賴醫生的專業經驗以及使用量表進行評估。然而，
@@ -27,5 +28,21 @@
 
 # Repository structure
 ```
-fefee
+┌ README.md
+├ Data_preprocessing.ipynb
+└ schizo_control_LSTM.ipynb
 ```
+# Files and Environment
+* ### Data_preprocessing.ipynb
+  * 資料前處理，包含資料清潔、訊號合併以及正規化等
+  * 使用**Python 3.9(anaconda) + Visual Studio Code**，並未使用GPU
+* ### schizo_control_LSTM.ipynb
+  * 模型訓練，包含Dataset、Dataloader、model的編寫，以及訓練方式和結果可視化，並且還有可解釋人工智慧的運用
+  * 使用 **Kaggle**提供之伺服器，搭配提供之P100做訓練
+ 
+# Prepared dataset
+訓練資料的製作主要在`Data_preprocessing.ipynb`檔案中，我主要做了四個處理:
+
+1. 定義正規化函數
+2. 定義資料處理函數以及訊號合併函數 - No Minmax processing
+3. 定義資料處理函數以及訊號合併函數 - Minmax processing
