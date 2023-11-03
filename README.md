@@ -62,7 +62,7 @@
 6. 套用函數到資料中，並將製作結果存成npy檔
 
 # Deep learning modeling
-建模主要在schizo_control_LSTM.ipynb檔案中，我主要做了幾個處理:
+建模主要在`schizo_control_LSTM.ipynb`檔案中，我主要做了幾個處理:
 
 1. 讀取各族群資料並合併成Dataframe
 2. 製作**Dataset**與**Dataloder**以供後續作訓練
@@ -124,5 +124,19 @@
            return con
    ```
 5. 使用`Optuna`尋找最佳參數
-6. 套用最佳參數，訓練預測並可視化結果
+   其使用需定義一個訓練函數，以回傳每次訓練結果
+   ```python
+   def object_fun(trial):
+       ...
+       ...
+       return train_accuracy
+   ```
+   並且建立study去自動尋找最佳參數
+   ```python
+   # Define sample
+   sampler = optuna.samplers.TPESampler(seed=10)
+   study = optuna.create_study(storage="sqlite:///cnn_npy_52_channel.db", study_name="mystudy", direction='maximize', sampler=sampler)
+   study.optimize(object_fun, n_trials=200)
+   ```
+7. 套用最佳參數，訓練預測並可視化結果
 
