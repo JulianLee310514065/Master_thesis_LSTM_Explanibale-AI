@@ -158,5 +158,5 @@
    ```python
    minmax(df_cuba.rolling(50).mean().bfill())
    ```
-5. 在背景畫出模型主要所看的位置，結果圖如下:
+5. 在背景畫出模型主要觀察的位置，結果圖如下，顏色越紅為越重要之區域:
 ![image](https://github.com/JulianLee310514065/Master_thesis/blob/main/image.png)
