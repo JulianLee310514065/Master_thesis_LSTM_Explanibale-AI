@@ -44,5 +44,85 @@
 訓練資料的製作主要在`Data_preprocessing.ipynb`檔案中，我主要做了四個處理:
 
 1. 定義正規化函數
-2. 定義資料處理函數以及訊號合併函數 - No Minmax processing
-3. 定義資料處理函數以及訊號合併函數 - Minmax processing
+   如下:
+   ```python
+   def minmax(df_temp):
+       dfs =  (df_temp - df_temp.min())/(df_temp.max() - df_temp.min())
+       return dfs
+   ```
+3. 定義資料處理函數以及訊號合併函數 - No minmax processing
+
+   參考[期刊論文](https://www.frontiersin.org/articles/10.3389/fpsyt.2021.655292/full)，將訊號從52 channel合併至2 channel的示意程式
+   ```python
+   region_1 = df[['CH25', 'CH26', 'CH27', 'CH28', 'CH36', 'CH37', 'CH38', 'CH46' , 'CH47', 'CH48', 'CH49']].mean(axis=1)
+   region_2 = df[['CH22', 'CH23', 'CH24', 'CH32', 'CH33', 'CH34', 'CH35', 'CH43', 'CH44', 'CH45', 'CH29', 'CH30', 'CH31', 'CH39', 'CH40', 'CH41', 'CH42', 'CH50', 'CH51', 'CH52']].mean(axis=1)
+   dff = pd.concat([region_1, region_2], axis=1)
+   ```
+5. 定義資料處理函數以及訊號合併函數 - Minmax processing
+6. 套用函數到資料中，並將製作結果存成npy檔
+
+# Deep learning modeling
+建模主要在schizo_control_LSTM.ipynb檔案中，我主要做了幾個處理:
+
+1. 讀取各族群資料並合併成Dataframe
+2. 製作**Dataset**與**Dataloder**以供後續作訓練
+
+   Dataset中主要定義讀取檔案的方式，以及套用transform於讀入之資料
+   ```python
+   class CustomImageDataset(Dataset):
+       def __init__(self, annotations_file, transform=None):
+    
+           self.dataframe = annotations_file
+           self.transform = transform
+           
+    
+       def __len__(self):
+           return len(self.dataframe)
+    
+       def __getitem__(self, idx):
+    
+           img_path = self.dataframe.iloc[idx, 0]        
+           np_araay = np.transpose(np.load(img_path.replace('\\', '/')))               
+           label = self.dataframe.iloc[idx, 1]
+    
+           if self.transform:
+               np_araay = self.transform(np_araay)
+                      
+           return np_araay, label, img_path 
+   ```
+3. 製作模型
+   本研究使用的是單層的LSTM模型，結構如下
+   ```python
+   class Network(nn.Module):
+       def __init__(self, pool = 6, hid_lay=1, fc1= 256, outlay = 64):
+           super(Network, self).__init__()
+           # LSTM
+           self.outlay = outlay
+           self.LSTM1 = nn.LSTM(1251, self.outlay, hid_lay)#, bidirectional=True)
+           
+           # FC        
+           self.fc1num = fc1
+           self.fc1 = nn.Linear(2*self.outlay, self.fc1num)
+           self.fc2 = nn.Linear(self.fc1num, 64)
+           self.fc3 = nn.Linear(64, 1)
+           # sigmoid
+           self.soft = nn.Sigmoid()
+    
+           self.drop = nn.Dropout(0.3)
+    
+    
+       def forward(self, input1):
+           output = self.LSTM1(input1)[0]
+           output = output.view(-1, 2*self.outlay)
+           # FC  forward
+           con = self.fc1(output)
+           con = F.relu(self.drop(con))
+           con = self.fc2(con)   
+           con = self.fc3(con)
+           con = self.soft(con)
+    
+           return con
+   ```
+5. 使用`Optuna`尋找最佳參數
+6. 套用最佳參數，訓練預測並可視化結果
+
