@@ -41,7 +41,7 @@
   * 使用 **Kaggle**提供之伺服器，搭配提供之P100做訓練
  
 # Prepared dataset
-訓練資料的製作主要在`Data_preprocessing.ipynb`檔案中，我主要做了四個處理:
+製作訓練資料的程式在`Data_preprocessing.ipynb`檔案中，我主要做了四個處理:
 
 1. 定義正規化函數
    如下:
@@ -62,7 +62,7 @@
 6. 套用函數到資料中，並將製作結果存成npy檔
 
 # Deep learning modeling
-建模主要在`schizo_control_LSTM.ipynb`檔案中，我主要做了幾個處理:
+建模程式在`schizo_control_LSTM.ipynb`檔案中，我主要做了五個處理:
 
 1. 讀取各族群資料並合併成Dataframe
 2. 製作**Dataset**與**Dataloder**以供後續作訓練
@@ -131,12 +131,32 @@
        ...
        return train_accuracy
    ```
-   並且建立study去自動尋找最佳參數
+   並且建立`study`去自動尋找最佳參數
    ```python
    # Define sample
    sampler = optuna.samplers.TPESampler(seed=10)
    study = optuna.create_study(storage="sqlite:///cnn_npy_52_channel.db", study_name="mystudy", direction='maximize', sampler=sampler)
    study.optimize(object_fun, n_trials=200)
    ```
-7. 套用最佳參數，訓練預測並可視化結果
+7. 套用最佳參數，訓練預測並用Matplotlib及混淆矩陣可視化結果
 
+# Explainable AI - Intergated Gradients
+可解釋AI程式位於`schizo_control_LSTM.ipynb`檔案中，我主要做了三個處理:
+
+1. 使用`Captum`套包中的`IntegratedGradients`，將模型與訊號丟入，之後得出`attributions`即為模型所關注的區域
+
+   ```python
+   # IntegratedGradients
+   df_cuba = pd.DataFrame()
+   attributions, delta = ig.attribute(input_data, target=0, return_convergence_delta=True)
+   for nums, att in enumerate(attributions):
+       df_cuba[f'{nums}_Region_0'] = att.cpu()[0]
+       df_cuba[f'{nums}_Region_1'] = att.cpu()[1]
+   ```    
+3. 使用`rolling apply`數值平滑，以方便畫圖及觀察
+   ```python
+   minmax(df_cuba.rolling(50).mean().bfill())
+   ```
+5. 在背景畫出模型主要所看的位置，結果圖如下:
+   
+   
