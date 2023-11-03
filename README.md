@@ -30,7 +30,8 @@
 ```
 ┌ README.md
 ├ Data_preprocessing.ipynb
-└ schizo_control_LSTM.ipynb
+├ schizo_control_LSTM.ipynb
+└ image.png
 ```
 # Files and Environment
 * ### Data_preprocessing.ipynb
@@ -158,5 +159,4 @@
    minmax(df_cuba.rolling(50).mean().bfill())
    ```
 5. 在背景畫出模型主要所看的位置，結果圖如下:
-   
-   
+![image](https://github.com/JulianLee310514065/Master_thesis/blob/main/image.png)
