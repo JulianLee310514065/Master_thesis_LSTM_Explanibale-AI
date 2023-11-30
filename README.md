@@ -42,7 +42,7 @@ Intelligent functional near-infrared spectroscopy for schizophrenia and bipolar 
   * 使用 **Kaggle**提供之伺服器，搭配提供之P100做訓練
  
 # Prepared dataset
-製作訓練資料的程式在`Data_preprocessing.ipynb`檔案中，我主要做了四個處理:
+程式在`Data_preprocessing.ipynb`檔案中，我主要做了四個處理:
 
 1. 定義正規化函數
    如下:
@@ -59,8 +59,8 @@ Intelligent functional near-infrared spectroscopy for schizophrenia and bipolar 
    region_2 = df[['CH22', 'CH23', 'CH24', 'CH32', 'CH33', 'CH34', 'CH35', 'CH43', 'CH44', 'CH45', 'CH29', 'CH30', 'CH31', 'CH39', 'CH40', 'CH41', 'CH42', 'CH50', 'CH51', 'CH52']].mean(axis=1)
    dff = pd.concat([region_1, region_2], axis=1)
    ```
-5. 定義資料處理函數以及訊號合併函數 - Minmax processing
-6. 套用函數到資料中，並將製作結果存成npy檔
+5. 定義資料處理函數以及訊號合併函數 - With minmax processing
+6. 套用函數，並將製作結果存成.npy檔
 
 # Deep learning modeling
 建模程式在`schizo_control_LSTM.ipynb`檔案中，我主要做了五個處理:
